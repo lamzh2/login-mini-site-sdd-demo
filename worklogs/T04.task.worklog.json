@@ -1,0 +1,63 @@
+{
+  "task_id": "T04",
+  "task_title": "Push GitHub, configure Vercel DB, deploy, and run production E2E",
+  "status": "in_progress",
+  "visible_work": {
+    "task_contract": {
+      "goal": "Create GitHub repository, configure hosted database and Vercel deployment, then run production E2E.",
+      "in_scope": ["git repository", "GitHub remote", "Vercel project", "database integration", "production deployment", "curl E2E"],
+      "out_of_scope": ["printing tokens", "committing secrets", "unrelated repositories"],
+      "expected_evidence": ["repo URL", "deployment URL", "database env configured", "production E2E output"],
+      "risk": "R3 Critical",
+      "assumptions": ["User-provided GitHub and Vercel tokens are temporary and will be revoked by user."]
+    },
+    "instruction_stack": {
+      "sources_checked": ["sdd task T04", "Vercel CLI help", "Vercel marketplace discover output", "project package scripts"],
+      "instructions_found": ["Use tokens only in process environment", "Do not commit secrets", "Run complete E2E after deployment"],
+      "conflicts": [],
+      "missing_sources": ["GitHub CLI is not installed"]
+    },
+    "repo_map": {
+      "project_type": "Next.js + Prisma + Vercel",
+      "package_manager": "npm",
+      "source_roots": ["app", "lib", "prisma", "scripts"],
+      "test_roots": ["scripts"],
+      "entrypoints": ["package.json", "vercel CLI", "GitHub REST API"],
+      "related_patterns": ["Vercel marketplace integration add", "GitHub create repo API"],
+      "boundaries": ["experiments/login-mini-site only", "no token files"]
+    },
+    "context_pack": {
+      "files_read": ["package.json", "prisma/schema.prisma", "tasks.md", "worklogs/T01-T03"],
+      "task_sections_used": ["Summary", "Frame", "Scope Boundary", "Deployment E2E Protocol", "Build Verification Gate"],
+      "adjacent_examples": [],
+      "validation_commands_identified": ["npm run build", "vercel deploy", "curl E2E"],
+      "constraints": ["tokens only env", "DATABASE_URL from Vercel/DB provider", "SESSION_SECRET env"]
+    },
+    "minimal_plan": {
+      "steps": ["Initialize git", "Create GitHub repo via API", "Push source", "Create/link Vercel project", "Provision database integration", "Set SESSION_SECRET", "Deploy production", "Run migrations", "Run production E2E"],
+      "files_to_change": [],
+      "files_to_add": ["scripts/e2e.mjs if needed", "vercel.json if needed"],
+      "validation_plan": ["npm run build", "production curl E2E"],
+      "risks_to_watch": ["Marketplace DB may require interactive approval or billing", "Prisma migration ordering on Vercel"]
+    },
+    "patch_loop": [],
+    "validation_loop": [],
+    "self_review": {
+      "requirement_coverage": "Pending deployment.",
+      "scope_drift": "Pending.",
+      "security_privacy": "Tokens must not be printed or committed.",
+      "regression_risk": "Production build must match local build.",
+      "evidence_quality": "Pending deployment and curl evidence.",
+      "open_issues": []
+    },
+    "evidence_report": {
+      "what_changed": [],
+      "files_changed": [],
+      "validation_summary": "Pending.",
+      "proven_facts": [],
+      "assumptions": ["GitHub/Vercel tokens are valid."],
+      "risks_or_gaps": [],
+      "next_step": "Create repo and deploy."
+    }
+  }
+}
