@@ -1,0 +1,95 @@
+{
+  "task_id": "T01",
+  "task_title": "Initialize Next.js project and basic pages",
+  "status": "ready",
+  "visible_work": {
+    "task_contract": {
+      "goal": "Initialize a Next.js App Router project and create basic public/auth page shells.",
+      "in_scope": ["package.json", "Next.js config", "app pages", "global styles"],
+      "out_of_scope": ["auth logic", "database connection", "deployment"],
+      "expected_evidence": ["npm run build passes"],
+      "risk": "R1 Medium",
+      "assumptions": ["Manual project scaffold is safer than interactive create-next-app for automation."]
+    },
+    "instruction_stack": {
+      "sources_checked": ["user request", "sdd task T01", "requirements.md", "design.md"],
+      "instructions_found": ["Use sdd-workflow first, smart-code-worker per task, produce visible worklog."],
+      "conflicts": [],
+      "missing_sources": ["AGENTS.md", "CLAUDE.md", ".cursorrules", "README.md", "package.json before scaffold"]
+    },
+    "repo_map": {
+      "project_type": "Next.js App Router",
+      "package_manager": "npm",
+      "source_roots": ["app", "lib", "prisma", "scripts"],
+      "test_roots": ["scripts"],
+      "entrypoints": ["app/page.tsx", "app/register/page.tsx", "app/login/page.tsx", "app/dashboard/page.tsx"],
+      "related_patterns": [],
+      "boundaries": ["experiments/login-mini-site only", "do not edit skills"]
+    },
+    "context_pack": {
+      "files_read": ["specs/2026-05-07-login-mini-site/requirements.md", "specs/2026-05-07-login-mini-site/design.md", "specs/2026-05-07-login-mini-site/tasks.md"],
+      "task_sections_used": ["Summary", "Frame", "Scope Boundary", "Build Verification Gate"],
+      "adjacent_examples": [],
+      "validation_commands_identified": ["npm run build"],
+      "constraints": ["no secrets", "no auth/database in T01"]
+    },
+    "minimal_plan": {
+      "steps": ["Create package/config files", "Create app layout/styles", "Create four page shells", "Run npm install/build"],
+      "files_to_change": [],
+      "files_to_add": ["package.json", "tsconfig.json", "next.config.mjs", "app/*", ".gitignore", ".env.example"],
+      "validation_plan": ["npm install", "npm run build"],
+      "risks_to_watch": ["Next 16 TypeScript config mismatch"]
+    },
+    "patch_loop": [
+      {
+        "step": "Create minimal Next.js project scaffold and page shells.",
+        "changed_files": ["package.json", "tsconfig.json", "next-env.d.ts", "next.config.mjs", ".gitignore", ".env.example", "app/layout.tsx", "app/globals.css", "app/page.tsx", "app/register/page.tsx", "app/login/page.tsx", "app/dashboard/page.tsx"],
+        "reason": "Provide buildable foundation for auth/database tasks.",
+        "scope_check": "inside_scope"
+      }
+    ],
+    "validation_loop": [
+      {
+        "command_or_method": "npm install",
+        "result": "blocked",
+        "exit_code": null,
+        "key_output": "command timed out after 124030 milliseconds",
+        "evidence_source": "tool_execution",
+        "notes": "Classified as environment/network/dependency-install timeout. Probe showed node_modules and package-lock existed."
+      },
+      {
+        "command_or_method": "npm install",
+        "result": "passed",
+        "exit_code": 0,
+        "key_output": "up to date, audited 65 packages in 1s",
+        "evidence_source": "tool_execution",
+        "notes": "Second run completed after partial install was already present."
+      },
+      {
+        "command_or_method": "npm run build",
+        "result": "passed",
+        "exit_code": 0,
+        "key_output": "Compiled successfully; routes generated for /, /dashboard, /login, /register",
+        "evidence_source": "tool_execution",
+        "notes": "Next.js production build passed."
+      }
+    ],
+    "self_review": {
+      "requirement_coverage": "T01 covers /, /register, /login, and /dashboard page shells.",
+      "scope_drift": "No auth/database implemented in T01.",
+      "security_privacy": "No secrets committed.",
+      "regression_risk": "Isolated new project directory.",
+      "evidence_quality": "npm install and npm run build outputs recorded.",
+      "open_issues": ["npm audit reports 2 moderate vulnerabilities; not blocking this scaffold task but should be reviewed before production hardening."]
+    },
+    "evidence_report": {
+      "what_changed": ["Created initial project scaffold and page shells."],
+      "files_changed": ["package.json", "app pages", "global styles"],
+      "validation_summary": "npm run build passed after dependency install recovered from timeout.",
+      "proven_facts": ["Files were created inside experiments/login-mini-site.", "Next.js production build passed.", "Dependency install timeout was environmental and recovered without code changes."],
+      "assumptions": ["Manual scaffold is acceptable."],
+      "risks_or_gaps": ["npm audit reports 2 moderate vulnerabilities."],
+      "next_step": "Proceed to T02 database/auth foundation."
+    }
+  }
+}
