@@ -10,7 +10,8 @@
     "prisma:migrate": "prisma migrate deploy",
     "prisma:push": "prisma db push",
     "e2e": "node scripts/e2e.mjs",
-    "check:security": "node scripts/static-security-check.mjs"
+    "check:security": "node scripts/static-security-check.mjs",
+    "env:run": "node scripts/run-with-env-local.mjs"
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
