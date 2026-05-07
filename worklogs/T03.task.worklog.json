@@ -1,0 +1,87 @@
+{
+  "task_id": "T03",
+  "task_title": "Implement register, login, logout, and protected dashboard",
+  "status": "ready",
+  "visible_work": {
+    "task_contract": {
+      "goal": "Implement registration, login, logout, and a protected dashboard using existing Prisma/session helpers.",
+      "in_scope": ["auth actions", "register/login forms", "dashboard protection"],
+      "out_of_scope": ["OAuth", "email verification", "password reset", "roles"],
+      "expected_evidence": ["npm run build passes", "auth smoke when DB env exists"],
+      "risk": "R2 High",
+      "assumptions": ["Local DB env may be unavailable until Vercel/Prisma Postgres is provisioned."]
+    },
+    "instruction_stack": {
+      "sources_checked": ["sdd task T03", "T02 helpers", "Next.js app files"],
+      "instructions_found": ["Use safe generic login errors", "Do not log passwords", "Protect dashboard"],
+      "conflicts": [],
+      "missing_sources": ["AGENTS.md", "README.md"]
+    },
+    "repo_map": {
+      "project_type": "Next.js App Router + Prisma auth",
+      "package_manager": "npm",
+      "source_roots": ["app", "lib"],
+      "test_roots": ["scripts"],
+      "entrypoints": ["lib/actions.ts", "app/register/page.tsx", "app/login/page.tsx", "app/dashboard/page.tsx"],
+      "related_patterns": ["lib/session.ts", "lib/password.ts", "lib/db.ts"],
+      "boundaries": ["no deployment in T03", "no database provisioning in T03"]
+    },
+    "context_pack": {
+      "files_read": ["lib/session.ts", "lib/password.ts", "lib/db.ts", "app pages", "tasks.md"],
+      "task_sections_used": ["Summary", "Frame", "Scope Boundary", "Build Verification Gate", "Deployment E2E Protocol"],
+      "adjacent_examples": ["T02 helper modules"],
+      "validation_commands_identified": ["npm run build"],
+      "constraints": ["generic login errors", "safe React rendering", "httpOnly session"]
+    },
+    "minimal_plan": {
+      "steps": ["Add zod validation", "Add server actions", "Add client forms", "Protect dashboard", "Run build"],
+      "files_to_change": ["app/register/page.tsx", "app/login/page.tsx", "app/dashboard/page.tsx"],
+      "files_to_add": ["lib/validation.ts", "lib/actions.ts", "app/register/register-form.tsx", "app/login/login-form.tsx"],
+      "validation_plan": ["npm run build"],
+      "risks_to_watch": ["server action typing with useActionState", "redirect return typing", "dashboard dynamic rendering"]
+    },
+    "patch_loop": [
+      {
+        "step": "Add validation schemas, server actions, client forms, and protected dashboard.",
+        "changed_files": ["lib/validation.ts", "lib/actions.ts", "app/register/register-form.tsx", "app/login/login-form.tsx", "app/register/page.tsx", "app/login/page.tsx", "app/dashboard/page.tsx"],
+        "reason": "Implement auth behavior and protected user display.",
+        "scope_check": "inside_scope"
+      }
+    ],
+    "validation_loop": [
+      {
+        "command_or_method": "npm run build",
+        "result": "passed",
+        "exit_code": 0,
+        "key_output": "Compiled successfully; /dashboard dynamic route generated.",
+        "evidence_source": "tool_execution",
+        "notes": "Auth UI/actions compile."
+      },
+      {
+        "command_or_method": "npm run check:security",
+        "result": "passed",
+        "exit_code": 0,
+        "key_output": "STATIC_SECURITY_CHECK_PASSED",
+        "evidence_source": "tool_execution",
+        "notes": "Checks no innerHTML, no password console logging, bcrypt, httpOnly cookie, generic login error, unique email."
+      }
+    ],
+    "self_review": {
+      "requirement_coverage": "Register, login, logout, and protected dashboard behavior implemented at code level.",
+      "scope_drift": "No deployment/database provisioning in T03.",
+      "security_privacy": "Generic login errors, password hash compare, no password logs.",
+      "regression_risk": "Build may fail on server action typing.",
+      "evidence_quality": "Build and static security check outputs recorded.",
+      "open_issues": ["Runtime auth smoke requires provisioned DATABASE_URL."]
+    },
+    "evidence_report": {
+      "what_changed": ["Added auth actions and forms."],
+      "files_changed": ["lib/actions.ts", "lib/validation.ts", "app/register/*", "app/login/*", "app/dashboard/page.tsx"],
+      "validation_summary": "Build and static security check passed.",
+      "proven_facts": ["Patch written inside project.", "Next.js production build passed.", "Static security check passed."],
+      "assumptions": ["DB env will be provided later."],
+      "risks_or_gaps": ["No runtime DB smoke yet."],
+      "next_step": "Proceed to T04 database provisioning, deployment, and production E2E."
+    }
+  }
+}
