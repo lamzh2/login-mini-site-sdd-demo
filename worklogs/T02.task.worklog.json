@@ -1,0 +1,79 @@
+{
+  "task_id": "T02",
+  "task_title": "Add Prisma database model and auth foundation",
+  "status": "ready",
+  "visible_work": {
+    "task_contract": {
+      "goal": "Add Prisma User model, Prisma client, password hashing, and signed httpOnly session helpers.",
+      "in_scope": ["prisma/schema.prisma", "lib/db.ts", "lib/password.ts", "lib/session.ts", "package dependencies"],
+      "out_of_scope": ["register/login server actions", "deployment", "database provisioning"],
+      "expected_evidence": ["npx prisma generate passes", "npm run build passes"],
+      "risk": "R2 High",
+      "assumptions": ["Prisma Postgres or another Postgres DATABASE_URL will be provided later."]
+    },
+    "instruction_stack": {
+      "sources_checked": ["sdd task T02", "package.json", "T01 output"],
+      "instructions_found": ["Use env for secrets", "Do not commit tokens or DATABASE_URL", "Hash passwords"],
+      "conflicts": [],
+      "missing_sources": ["AGENTS.md", "CLAUDE.md", "README.md"]
+    },
+    "repo_map": {
+      "project_type": "Next.js App Router + Prisma",
+      "package_manager": "npm",
+      "source_roots": ["app", "lib", "prisma"],
+      "test_roots": ["scripts"],
+      "entrypoints": ["lib/db.ts", "lib/password.ts", "lib/session.ts", "prisma/schema.prisma"],
+      "related_patterns": ["T01 Next.js scaffold"],
+      "boundaries": ["no server actions in T02", "no secrets in source"]
+    },
+    "context_pack": {
+      "files_read": ["package.json", "specs/2026-05-07-login-mini-site/tasks.md", "app pages"],
+      "task_sections_used": ["Summary", "Frame", "Scope Boundary", "Build Verification Gate"],
+      "adjacent_examples": [],
+      "validation_commands_identified": ["npx prisma generate", "npm run build"],
+      "constraints": ["DATABASE_URL from env", "SESSION_SECRET from env", "bcrypt hashing"]
+    },
+    "minimal_plan": {
+      "steps": ["Add Prisma schema", "Add Prisma client singleton", "Add bcrypt helpers", "Add signed cookie session helpers", "Run prisma generate/build"],
+      "files_to_change": [],
+      "files_to_add": ["prisma/schema.prisma", "lib/db.ts", "lib/password.ts", "lib/session.ts"],
+      "validation_plan": ["npx prisma generate", "npm run build"],
+      "risks_to_watch": ["Next cookies async API", "SESSION_SECRET build-time access", "Prisma generate needs DATABASE_URL only for some commands"]
+    },
+    "patch_loop": [
+      {
+        "step": "Add Prisma schema and auth helper modules.",
+        "changed_files": ["prisma/schema.prisma", "lib/db.ts", "lib/password.ts", "lib/session.ts"],
+        "reason": "Provide DB/auth foundation for register/login task.",
+        "scope_check": "inside_scope"
+      }
+    ],
+    "validation_loop": [
+      {
+        "command_or_method": "npx prisma generate && npm run build",
+        "result": "passed",
+        "exit_code": 0,
+        "key_output": "Generated Prisma Client v6.19.3; Next.js build compiled successfully.",
+        "evidence_source": "tool_execution",
+        "notes": "T02 validation gate passed."
+      }
+    ],
+    "self_review": {
+      "requirement_coverage": "User model, Prisma client, bcrypt helpers, and signed httpOnly session helpers are present.",
+      "scope_drift": "No register/login actions added in T02.",
+      "security_privacy": "Password hashing and httpOnly cookie helper added; no secrets committed.",
+      "regression_risk": "Build may fail if Next cookies API or crypto handling is wrong.",
+      "evidence_quality": "Prisma generate and Next build output recorded.",
+      "open_issues": []
+    },
+    "evidence_report": {
+      "what_changed": ["Added database and auth foundation."],
+      "files_changed": ["prisma/schema.prisma", "lib/db.ts", "lib/password.ts", "lib/session.ts"],
+      "validation_summary": "Prisma generate and Next build passed.",
+      "proven_facts": ["Source files were created.", "Prisma Client generated.", "Next.js production build passed."],
+      "assumptions": ["Postgres DATABASE_URL will be configured later."],
+      "risks_or_gaps": ["No database provisioned yet."],
+      "next_step": "Proceed to T03 register/login/dashboard behavior."
+    }
+  }
+}
