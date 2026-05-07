@@ -1,0 +1,25 @@
+name: Production E2E
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  production-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Run production E2E
+        env:
+          E2E_BASE_URL: https://login-mini-site-sdd-demo.vercel.app
+        run: node scripts/e2e.mjs
