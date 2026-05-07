@@ -3,53 +3,93 @@
     "id": "2026-05-07-login-mini-site",
     "title": "Login Mini Site",
     "mode": "Full",
-    "source_files": ["requirements.md", "design.md", "tasks.md"]
+    "source_files": [
+      "requirements.md",
+      "design.md",
+      "tasks.md"
+    ]
   },
   "version": "1.0",
   "tasks": [
     {
       "id": "T01",
       "title": "Initialize Next.js project and basic pages",
-      "status": "not_started",
+      "status": "done",
       "goal": "Create the Next.js App Router project and four basic pages.",
       "risk": "R1 Medium",
       "owner": "frontend",
       "priority": "P1",
-      "badges": ["build-required", "visible-work"],
-      "requirement_trace": ["REQ-001", "REQ-004", "NFR-003"]
+      "badges": [
+        "build-required",
+        "visible-work"
+      ],
+      "requirement_trace": [
+        "REQ-001",
+        "REQ-004",
+        "NFR-003"
+      ]
     },
     {
       "id": "T02",
       "title": "Add Prisma database model and auth foundation",
-      "status": "not_started",
+      "status": "done",
       "goal": "Add Prisma schema, User model, client, password hashing, and session helpers.",
       "risk": "R2 High",
       "owner": "fullstack",
       "priority": "P0",
-      "badges": ["database", "security", "visible-work"],
-      "requirement_trace": ["REQ-002", "REQ-003", "REQ-005", "SEC-002", "SEC-003"]
+      "badges": [
+        "database",
+        "security",
+        "visible-work"
+      ],
+      "requirement_trace": [
+        "REQ-002",
+        "REQ-003",
+        "REQ-005",
+        "SEC-002",
+        "SEC-003"
+      ]
     },
     {
       "id": "T03",
       "title": "Implement register, login, logout, and protected dashboard",
-      "status": "not_started",
+      "status": "done",
       "goal": "Implement server actions and protected authenticated dashboard behavior.",
       "risk": "R2 High",
       "owner": "fullstack",
       "priority": "P0",
-      "badges": ["auth", "security", "visible-work"],
-      "requirement_trace": ["REQ-002", "REQ-003", "REQ-004", "SEC-004", "SEC-005"]
+      "badges": [
+        "auth",
+        "security",
+        "visible-work"
+      ],
+      "requirement_trace": [
+        "REQ-002",
+        "REQ-003",
+        "REQ-004",
+        "SEC-004",
+        "SEC-005"
+      ]
     },
     {
       "id": "T04",
       "title": "Push GitHub, configure Vercel DB, deploy, and run production E2E",
-      "status": "not_started",
+      "status": "done",
       "goal": "Create repo, deploy with database, and prove production behavior with E2E evidence.",
       "risk": "R3 Critical",
       "owner": "delivery",
       "priority": "P0",
-      "badges": ["github", "vercel", "database", "final-e2e", "visible-work"],
-      "requirement_trace": ["REQ-005", "REQ-006"]
+      "badges": [
+        "github",
+        "vercel",
+        "database",
+        "final-e2e",
+        "visible-work"
+      ],
+      "requirement_trace": [
+        "REQ-005",
+        "REQ-006"
+      ]
     }
   ]
 }

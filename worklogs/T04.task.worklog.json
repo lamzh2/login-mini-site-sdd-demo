@@ -1,63 +1,241 @@
 {
   "task_id": "T04",
   "task_title": "Push GitHub, configure Vercel DB, deploy, and run production E2E",
-  "status": "in_progress",
+  "status": "done",
   "visible_work": {
     "task_contract": {
       "goal": "Create GitHub repository, configure hosted database and Vercel deployment, then run production E2E.",
-      "in_scope": ["git repository", "GitHub remote", "Vercel project", "database integration", "production deployment", "curl E2E"],
-      "out_of_scope": ["printing tokens", "committing secrets", "unrelated repositories"],
-      "expected_evidence": ["repo URL", "deployment URL", "database env configured", "production E2E output"],
+      "in_scope": [
+        "git repository",
+        "GitHub remote",
+        "Vercel project",
+        "database integration",
+        "production deployment",
+        "curl E2E"
+      ],
+      "out_of_scope": [
+        "printing tokens",
+        "committing secrets",
+        "unrelated repositories"
+      ],
+      "expected_evidence": [
+        "repo URL",
+        "deployment URL",
+        "database env configured",
+        "production E2E output"
+      ],
       "risk": "R3 Critical",
-      "assumptions": ["User-provided GitHub and Vercel tokens are temporary and will be revoked by user."]
+      "assumptions": [
+        "User-provided GitHub and Vercel tokens are temporary and will be revoked by user."
+      ]
     },
     "instruction_stack": {
-      "sources_checked": ["sdd task T04", "Vercel CLI help", "Vercel marketplace discover output", "project package scripts"],
-      "instructions_found": ["Use tokens only in process environment", "Do not commit secrets", "Run complete E2E after deployment"],
+      "sources_checked": [
+        "sdd task T04",
+        "Vercel CLI help",
+        "Vercel marketplace discover output",
+        "project package scripts"
+      ],
+      "instructions_found": [
+        "Use tokens only in process environment",
+        "Do not commit secrets",
+        "Run complete E2E after deployment"
+      ],
       "conflicts": [],
-      "missing_sources": ["GitHub CLI is not installed"]
+      "missing_sources": [
+        "GitHub CLI is not installed"
+      ]
     },
     "repo_map": {
       "project_type": "Next.js + Prisma + Vercel",
       "package_manager": "npm",
-      "source_roots": ["app", "lib", "prisma", "scripts"],
-      "test_roots": ["scripts"],
-      "entrypoints": ["package.json", "vercel CLI", "GitHub REST API"],
-      "related_patterns": ["Vercel marketplace integration add", "GitHub create repo API"],
-      "boundaries": ["experiments/login-mini-site only", "no token files"]
+      "source_roots": [
+        "app",
+        "lib",
+        "prisma",
+        "scripts"
+      ],
+      "test_roots": [
+        "scripts"
+      ],
+      "entrypoints": [
+        "package.json",
+        "vercel CLI",
+        "GitHub REST API"
+      ],
+      "related_patterns": [
+        "Vercel marketplace integration add",
+        "GitHub create repo API"
+      ],
+      "boundaries": [
+        "experiments/login-mini-site only",
+        "no token files"
+      ]
     },
     "context_pack": {
-      "files_read": ["package.json", "prisma/schema.prisma", "tasks.md", "worklogs/T01-T03"],
-      "task_sections_used": ["Summary", "Frame", "Scope Boundary", "Deployment E2E Protocol", "Build Verification Gate"],
+      "files_read": [
+        "package.json",
+        "prisma/schema.prisma",
+        "tasks.md",
+        "worklogs/T01-T03"
+      ],
+      "task_sections_used": [
+        "Summary",
+        "Frame",
+        "Scope Boundary",
+        "Deployment E2E Protocol",
+        "Build Verification Gate"
+      ],
       "adjacent_examples": [],
-      "validation_commands_identified": ["npm run build", "vercel deploy", "curl E2E"],
-      "constraints": ["tokens only env", "DATABASE_URL from Vercel/DB provider", "SESSION_SECRET env"]
+      "validation_commands_identified": [
+        "npm run build",
+        "vercel deploy",
+        "curl E2E"
+      ],
+      "constraints": [
+        "tokens only env",
+        "DATABASE_URL from Vercel/DB provider",
+        "SESSION_SECRET env"
+      ]
     },
     "minimal_plan": {
-      "steps": ["Initialize git", "Create GitHub repo via API", "Push source", "Create/link Vercel project", "Provision database integration", "Set SESSION_SECRET", "Deploy production", "Run migrations", "Run production E2E"],
+      "steps": [
+        "Initialize git",
+        "Create GitHub repo via API",
+        "Push source",
+        "Create/link Vercel project",
+        "Provision database integration",
+        "Set SESSION_SECRET",
+        "Deploy production",
+        "Run migrations",
+        "Run production E2E"
+      ],
       "files_to_change": [],
-      "files_to_add": ["scripts/e2e.mjs if needed", "vercel.json if needed"],
-      "validation_plan": ["npm run build", "production curl E2E"],
-      "risks_to_watch": ["Marketplace DB may require interactive approval or billing", "Prisma migration ordering on Vercel"]
+      "files_to_add": [
+        "scripts/e2e.mjs if needed",
+        "vercel.json if needed"
+      ],
+      "validation_plan": [
+        "npm run build",
+        "production curl E2E"
+      ],
+      "risks_to_watch": [
+        "Marketplace DB may require interactive approval or billing",
+        "Prisma migration ordering on Vercel"
+      ]
     },
-    "patch_loop": [],
-    "validation_loop": [],
+    "patch_loop": [
+      {
+        "slice": "Repository and deployment setup",
+        "files_changed": [
+          "package.json",
+          "scripts/run-with-env-local.mjs",
+          ".gitignore"
+        ],
+        "reason": "Make Prisma/Vercel environment commands reproducible without committing secrets.",
+        "result": "Committed locally and synchronized to GitHub via API because git smart HTTP push was blocked from this environment."
+      },
+      {
+        "slice": "Curlable auth API and E2E",
+        "files_changed": [
+          "lib/auth-service.ts",
+          "app/api/register/route.ts",
+          "app/api/login/route.ts",
+          "app/api/logout/route.ts",
+          "app/api/me/route.ts",
+          "scripts/e2e.mjs",
+          ".github/workflows/production-e2e.yml"
+        ],
+        "reason": "Server Actions are browser form transport, so deployment E2E needed ordinary HTTP endpoints with explicit status codes and response bodies.",
+        "result": "Local production E2E and GitHub Actions production E2E passed."
+      },
+      {
+        "slice": "Deployment hygiene",
+        "files_changed": [
+          ".vercelignore"
+        ],
+        "reason": "Exclude local env files from Vercel deployment uploads while keeping .env.example in GitHub for developer reference.",
+        "result": "Final Vercel deploy no longer emitted the .env warning."
+      }
+    ],
+    "validation_loop": [
+      {
+        "command": "npx tsc --noEmit",
+        "result": "passed",
+        "evidence": "Exit code 0 after API route/auth-service refactor."
+      },
+      {
+        "command": "npm run check:security",
+        "result": "passed",
+        "evidence": "STATIC_SECURITY_CHECK_PASSED."
+      },
+      {
+        "command": "npm run build",
+        "result": "passed",
+        "evidence": "Next.js production build passed; routes include /api/login, /api/logout, /api/me, /api/register, /dashboard, /login, /register."
+      },
+      {
+        "command": "$env:E2E_BASE_URL=http://127.0.0.1:3100; npm run e2e",
+        "result": "passed",
+        "evidence": "E2E_PASSED for GET pages, anonymous auth rejection, empty register rejection, register/login/logout POSTs, authenticated /api/me, protected dashboard, and XSS-safe rendering."
+      },
+      {
+        "command": "npx vercel deploy --prod --yes",
+        "result": "passed",
+        "evidence": "Deployment dpl_GbWJTnUNQtsknPsTHFQTpgwiVW4o READY; production alias https://login-mini-site-sdd-demo.vercel.app assigned."
+      },
+      {
+        "command": "curl.exe / npm run e2e against production from local machine",
+        "result": "blocked",
+        "evidence": "Connect timeout from this machine to login-mini-site-sdd-demo.vercel.app:443; Vercel inspect still reported production deployment READY and aliased."
+      },
+      {
+        "command": "GitHub Actions workflow Production E2E",
+        "result": "passed",
+        "evidence": "Run 25483377829 completed with conclusion success against https://login-mini-site-sdd-demo.vercel.app."
+      }
+    ],
     "self_review": {
-      "requirement_coverage": "Pending deployment.",
-      "scope_drift": "Pending.",
-      "security_privacy": "Tokens must not be printed or committed.",
-      "regression_risk": "Production build must match local build.",
-      "evidence_quality": "Pending deployment and curl evidence.",
-      "open_issues": []
+      "requirement_coverage": "Covered: GitHub repository, Vercel project, hosted Prisma Postgres database, session secret env, production deployment, and E2E verification.",
+      "scope_drift": "No unrelated repositories or global skill files changed during app delivery.",
+      "security_privacy": "Tokens were used only as process environment variables; .env.local, .vercel, node_modules, and build artifacts were excluded from GitHub sync and Vercel upload.",
+      "regression_risk": "Low for the demo scope after typecheck/build/local E2E/GitHub Actions E2E passed.",
+      "evidence_quality": "Strong, with local production E2E and external GitHub runner E2E. Local direct production curl remains blocked by network path, not app readiness.",
+      "open_issues": [
+        "Current local network resolves or connects to *.vercel.app unreliably, so local production curl evidence is blocked; external GitHub Actions passed."
+      ]
     },
     "evidence_report": {
-      "what_changed": [],
-      "files_changed": [],
-      "validation_summary": "Pending.",
-      "proven_facts": [],
-      "assumptions": ["GitHub/Vercel tokens are valid."],
-      "risks_or_gaps": [],
-      "next_step": "Create repo and deploy."
+      "what_changed": [
+        "Created and deployed a 4-page login mini site with database-backed auth.",
+        "Added curlable API endpoints for deterministic E2E.",
+        "Added production E2E workflow for external verification."
+      ],
+      "files_changed": [
+        "app/",
+        "lib/",
+        "prisma/schema.prisma",
+        "scripts/",
+        ".github/workflows/production-e2e.yml",
+        ".vercelignore",
+        "specs/",
+        "worklogs/"
+      ],
+      "validation_summary": "Typecheck, security check, production build, local production E2E, Vercel deployment, GitHub sync, and GitHub Actions production E2E passed. Local machine production curl was blocked by network timeout.",
+      "proven_facts": [
+        "GitHub repo exists at https://github.com/lamzh2/login-mini-site-sdd-demo.",
+        "Vercel production URL is https://login-mini-site-sdd-demo.vercel.app.",
+        "Final deployment id dpl_GbWJTnUNQtsknPsTHFQTpgwiVW4o is READY.",
+        "Production E2E GitHub Actions run 25483377829 concluded success."
+      ],
+      "assumptions": [
+        "User will revoke temporary GitHub and Vercel tokens after review."
+      ],
+      "risks_or_gaps": [
+        "No DELETE feature exists in this demo, so DELETE E2E is explicitly not_applicable.",
+        "Local network to vercel.app timed out, so external runner evidence was used for final production E2E."
+      ],
+      "next_step": "User can inspect the live site, repository, and workflow run; revoke temporary tokens."
     }
   }
 }
